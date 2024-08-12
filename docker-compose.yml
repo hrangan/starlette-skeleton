@@ -1,0 +1,34 @@
+version: "3.7"
+services:
+    web:
+        build: .
+        environment:
+            DATABASE_URL: postgres://postgres:postgres@db:5432/lawbreaker
+            DEBUG: true
+            UVICORN_PORT: 6666
+            UVICORN_RELOAD: true
+            UVICORN_HOST: 0.0.0.0
+        ports:
+            - "8008:6666"
+        volumes:
+            - ./:/opt
+        networks:
+            - default
+        depends_on:
+            - db
+    db:
+        image: postgres
+        environment:
+            POSTGRES_USER: postgres
+            POSTGRES_PASSWORD: postgres
+            POSTGRES_DB: srcdb
+        volumes:
+            - "postgresdata:/var/lib/postgresql/data"
+        ports:
+            - "5432:5432"
+        networks:
+            - default
+networks:
+    default:
+volumes:
+    postgresdata:
